@@ -1,3 +1,9 @@
+# Local debugging overlay, applied only with
+# `pnpm dsh web --patch ./scratch-plugin/cordis.yml`.
+# Re-inserting the same entry id overrides the bundle's row (last write wins),
+# so the Host half loads straight from source through the CLI's tsx loader:
+# no rebuild is needed while iterating. Keep the id equal to the bundle's so
+# the settings namespace ('test-stats') and the client form stay aligned.
 - insert:
     - id: test-stats
       name: 'D:/work/deepseek-harness/scratch-plugin/src/index.ts'

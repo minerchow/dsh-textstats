@@ -1,3 +1,8 @@
+# Bundle patch: inserted as a profile bundle layer (below the user patch
+# layer), so the settings UI can persist config edits to cordis.patch.yml.
+# The entry id is the settings namespace and must match the client's NS.
+# `name` resolves through the package root export to the built dist/index.js,
+# so `pnpm build` must run before `dsh plugin --profile web add .`.
 - insert:
     - id: test-stats
       name: dsh-text-stats

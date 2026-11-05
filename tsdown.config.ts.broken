@@ -1,0 +1,59 @@
+/**
+ * Standalone client-bundle build for the scratch text-stats plugin.
+ *
+ * The harness's web client composes plugin client bundles as parser-preloaded
+ * classic scripts: each bundle registers one factory through
+ * `window.__ModuleLoader__.load({ id, factory })` and resolves its
+ * dependencies through the frozen module table the shell seeds. The factory
+ * receives `(require)` and must return `module.exports`.
+ *
+ * Only the browser half is built here. The host half (`src/index.ts`) loads
+ * from source via tsx, so it needs no bundle. The external set is exactly the
+ * platform module table the shell seeds (`PLATFORM_MODULES` in
+ * packages/client/web/src/platform.ts); every one of those stays a runtime
+ * `require()` and is never inlined, which is what the loader can answer.
+ */
+
+const ID = 'dsh-text-stats'
+
+/** Module-table rows the shell seeds; see packages/client/web/src/platform.ts. */
+const PLATFORM_MODULES = [
+  'react',
+  'react/jsx-runtime',
+  'react-dom',
+  'react-dom/client',
+  '@deepseek-ai/cordis',
+  'zod',
+  '@tanstack/react-virtual',
+  '@deepseek-ai/dsh-client-store',
+  '@deepseek-ai/dsh-client-ui-slots',
+  '@deepseek-ai/dsh-client-ui-primitives',
+  '@deepseek-ai/dsh-client-ui-dockkit',
+] as const
+
+export default {
+  entry: { client: 'src/client/index.tsx' },
+  outDir: 'dist',
+  format: 'cjs',
+  platform: 'browser',
+  target: 'es2024',
+  fixedExtension: false,
+  dts: false,
+  sourcemap: true,
+  clean: true,
+  external: [...PLATFORM_MODULES],
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+    'import.meta.env.MODE': JSON.stringify('production'),
+    'import.meta.env': JSON.stringify({ MODE: 'production' }),
+  },
+  banner: {
+    js: `window.__ModuleLoader__.load({ id: ${JSON.stringify(ID)}, factory: (require) => {`,
+  },
+  intro: {
+    js: 'var module = { exports: {} }; var exports = module.exports;',
+  },
+  footer: {
+    js: 'return module.exports; } });',
+  },
+})

@@ -3,22 +3,13 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "outDir": "./dist",
-    "rootDir": "src",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
     "strict": true,
     "esModuleInterop": true,
-    // 关键！补齐内置API类型 WeakRef、Symbol.dispose、ErrorOptions
-    "lib": [
-      "ES2021",
-      "DOM"
-    ],
-    // 跳过外部库的类型检查（兜底，解决cosmokit Volatile 类型缺失）
+    "lib": ["ES2021", "DOM"],
     "skipLibCheck": true
   },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "dist"
-  ]
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist"]
 }

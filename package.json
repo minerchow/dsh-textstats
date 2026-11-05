@@ -1,23 +1,43 @@
 {
   "name": "dsh-text-stats",
   "version": "1.0.0",
-  "description": "",
-  "main": "./dist/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "type": "module",
-  "dependencies": {
-   
+  "main": "./dist/index.js",
+  "exports": {
+    ".": { "types": "./src/index.ts", "default": "./dist/index.js" },
+    "./client": { "types": "./src/client/index.tsx", "default": "./dist/client.js" },
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
   },
-   "files": [
+  "scripts": {
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && node ../node_modules/tsdown/dist/run.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/stats.test.ts"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "*"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-client-ui-primitives": "*",
+    "@deepseek-ai/dsh-client-ui-settings": "*",
+    "@deepseek-ai/dsh-client-ui-slots": "*",
+    "@deepseek-ai/dsh-client-store": "*",
+    "react": "^18.2.0"
+  },
+  "files": [
     "dist",
+    "src",
     "cordis.patch.yml"
   ],
-   "dsh": {
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    },
     "bundle": {
       "patch": "./cordis.patch.yml"
     }
